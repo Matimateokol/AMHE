@@ -11,3 +11,9 @@ class Node:
 
     def _get_node_id(self):
         return self.node_id
+    
+    def _set_longitude_latitude(self, longitude: float, latitude: float):
+        self.longitude_latitude = (longitude, latitude)
+    
+    def _get_longitude_latitude(self):
+        return self.longitude_latitude
