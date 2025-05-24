@@ -15,6 +15,14 @@ def main():
 
     # print(adm_paths.paths)
     # print(adm_paths)
+    foo = [1, 1, 1, 1, 1]
+    bar = [0, 0, 0, 0, 0]
+    print(list(zip(foo, bar)))
+    con = []
+    for f, b in zip(foo, bar):
+        con.append(f)
+        con.append(b)
+    print(con)
 
     demand1 = Demand("1", "Warszawa", "Bytom", 2, 300.00)
     link1 = Link("1", ("Warszawa", "Bytom"), 200.00, 20, 2, 2, (2, 2, 2, 2))
