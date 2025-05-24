@@ -6,6 +6,9 @@ class Node:
     def __str__(self):
         return f"{self.node_id} ( {self.longitude_latitude[0]} {self.longitude_latitude[1]} )"
     
+    def __repr__(self):
+        return f"{self.node_id} ( {self.longitude_latitude[0]} {self.longitude_latitude[1]} )"
+    
     def _set_node_id(self, new_node_id):
         self.node_id = new_node_id
 

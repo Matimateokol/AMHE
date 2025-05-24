@@ -21,6 +21,9 @@ class Link:
     def __str__(self):
         return f"{self.link_id} {self.connection} {self.pre_installed_capacity} {self.pre_installed_capacity_cost} {self.routing_cost} {self.setup_cost} {self.module_capacity_cost}"
     
+    def __repr__(self):
+        return f"{self.link_id} {self.connection} {self.pre_installed_capacity} {self.pre_installed_capacity_cost} {self.routing_cost} {self.setup_cost} {self.module_capacity_cost}"
+
     def _get_link_id(self):
         return self.link_id
     

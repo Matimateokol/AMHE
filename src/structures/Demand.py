@@ -11,6 +11,9 @@ class Demand:
     def __str__(self):
         return f"{self.demand_id} {( self.source, self.target )} {self.routing_unit} {self.demand_value} {self.max_path_length}"
     
+    def __repr__(self):
+        return f"{self.demand_id} {( self.source, self.target )} {self.routing_unit} {self.demand_value} {self.max_path_length}"
+    
     def _get_demand_id(self):
         return self.demand_id
     
