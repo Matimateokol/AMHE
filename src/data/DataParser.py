@@ -22,7 +22,6 @@ def parse_data(file_path, src_file_format = 'xml') -> ObjectsDB:
     demands = root.find('demands').findall("demand")
     links = root.find("networkStructure").find("links").findall("link")
     nodes = root.find("networkStructure").find("nodes").findall("node")
-    admisible_paths = root.findall("admissiblePath")
 
     for demand in demands:
         demand_obj = Demand(
@@ -60,13 +59,20 @@ def parse_data(file_path, src_file_format = 'xml') -> ObjectsDB:
         )
         data_in_runtime.persist_object(node_obj)
 
-    for path in admisible_paths:
-        link_ids = [id.text for id in path.findall("linkId")]
-        adm_path = AdmisiblePath(
-            path.find("id"),
-            link_ids
-        )
-        data_in_runtime.persist_object(adm_path)
+    admisible_paths = AdmisiblePaths(data_in_runtime.demands.keys())
+
+    # Assign admisible paths for each demand
+    for demand in demands:
+        adm_paths = demand.find("admissiblePaths").findall("admissiblePath")
+        
+        for adm_path in adm_paths:
+            path = AdmisiblePath(
+                adm_path.get("id"),
+                list([link.text for link in adm_path.findall("linkId")])
+            )
+            admisible_paths.add_path_for_demand(demand.get("id"), path)
+
+    data_in_runtime.persist_object(admisible_paths)
 
     return data_in_runtime
 

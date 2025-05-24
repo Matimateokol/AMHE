@@ -4,7 +4,7 @@ class ObjectsDB:
         self.demands = {}
         self.links = {}
         self.nodes = {}
-        self.admisible_paths = {}
+        self.admisible_paths = None
 
     def persist_object(self, object):
         if type(object).__name__ == "Demand":
@@ -16,8 +16,8 @@ class ObjectsDB:
         elif type(object).__name__ == "Node":
             self.nodes[object.node_id] = object
             print("Persisted object of type 'Node'")
-        elif type(object).__name__ == "AdmisiblePath":
-            self.admisible_paths[object.path_id] = object
+        elif type(object).__name__ == "AdmisiblePaths":
+            self.admisible_paths = object
             print("Persisted object of type 'AdmisiblePath'")
         else:
             print("Persisted object of some different type")
