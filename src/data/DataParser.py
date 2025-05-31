@@ -5,8 +5,6 @@ from structures.Node import Node
 from structures.AdmisiblePaths import AdmisiblePaths, AdmisiblePath
 import xml.etree.ElementTree as ET
 
-file_location = "data/raw/polska.xml"
-
 def strip_namespace(tree):
     for elem in tree.iter():
         if '}' in elem.tag:
@@ -75,10 +73,3 @@ def parse_data(file_path, src_file_format = 'xml') -> ObjectsDB:
     data_in_runtime.persist_object(admisible_paths)
 
     return data_in_runtime
-
-DB = parse_data(file_location)
-
-# print(DB.demands)
-# print(DB.links)
-# print(DB.nodes)
-print(DB.admisible_paths)
