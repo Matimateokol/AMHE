@@ -3,6 +3,8 @@ from structures.ObjectsDB import ObjectsDB
 from structures.Demand import Demand
 from structures.Link import Link
 from structures.Node import Node
+from data import DataParser
+import pandas as pd
 
 def main():
     # list_of_demands = ["Demand_0_1", "Demand_0_2", "Demand_0_3"]
@@ -15,14 +17,6 @@ def main():
 
     # print(adm_paths.paths)
     # print(adm_paths)
-    foo = [1, 1, 1, 1, 1]
-    bar = [0, 0, 0, 0, 0]
-    print(list(zip(foo, bar)))
-    con = []
-    for f, b in zip(foo, bar):
-        con.append(f)
-        con.append(b)
-    print(con)
 
     demand1 = Demand("1", "Warszawa", "Bytom", 2, 300.00)
     link1 = Link("1", ("Warszawa", "Bytom"), 200.00, 20, 2, 2, (2, 2, 2, 2))
@@ -31,6 +25,14 @@ def main():
     objects_db = ObjectsDB()
 
     objects_db.persist_object(link1)
+
+    file_location = "data/raw/polska.xml"
+
+    objects_db = DataParser.parse_data(file_location)
+
+    # print(objects_db.demands.items())
+    for (k, v) in objects_db.demands.items():
+        print(f'{k}: {v.demand_value}')
 
 if __name__ == "__main__":
     main()
