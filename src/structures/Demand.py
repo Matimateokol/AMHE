@@ -14,41 +14,41 @@ class Demand:
     def __repr__(self):
         return f"{self.demand_id} {( self.source, self.target )} {self.routing_unit} {self.demand_value} {self.max_path_length}"
     
-    def _get_demand_id(self):
+    def get_demand_id(self) -> str:
         return self.demand_id
     
-    def _set_demand_id(self, demand_id: str):
+    def set_demand_id(self, demand_id: str):
         self.demand_id = demand_id
 
-    def _get_connection(self):
+    def get_connection(self) -> tuple[str, str]:
         return (self.source, self.target)
     
-    def _get_source(self):
+    def get_source(self) -> str:
         return self.source
     
-    def _set_source(self, src: str):
+    def set_source(self, src: str):
         self.source = src
 
-    def _get_target(self):
+    def get_target(self) -> str:
         return self.target
     
-    def _set_target(self, dst: str):
+    def set_target(self, dst: str):
         self.target = dst
     
-    def _get_routing_unit(self):
+    def get_routing_unit(self) -> int:
         return self.routing_unit
     
-    def _set_routing_unit(self, routing_unit: int):
+    def set_routing_unit(self, routing_unit: int):
         self.routing_unit = routing_unit
 
-    def _get_demand_value(self):
+    def get_demand_value(self) -> float:
         return self.demand_value
     
-    def _set_demand_value(self, demand_value: float):
+    def set_demand_value(self, demand_value: float):
         self.demand_value = demand_value
 
-    def _get_max_path_length(self):
+    def get_max_path_length(self) -> str:
         return self.max_path_length
     
-    def _set_max_path_length(self, max_path_length: str):
+    def set_max_path_length(self, max_path_length: str):
         self.max_path_length = max_path_length
