@@ -34,6 +34,9 @@ class ObjectsDB:
 
     def get_demand_ids(self) -> list[str]:
         return [demand_id for demand_id in self.demands.keys()]
+
+    def get_demands_values(self) -> list[float]:
+        return [demand.get_demand_value() for demand in self.demands.values()]
     
     def get_links(self) -> dict:
         return self.links
