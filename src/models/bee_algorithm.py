@@ -33,8 +33,8 @@ import math
 import random
 import pandas as pd
 
-randomness_seed = 77
-random.seed(randomness_seed)
+# randomness_seed = 77
+# random.seed(randomness_seed)
 
 ### Custom type-aliases ###
 DPLMapping: TypeAlias = dict[str, dict[str, list[str]]]  # key: demand_id, value: (key: path_id, value: links)

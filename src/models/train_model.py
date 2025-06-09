@@ -5,7 +5,7 @@ from models.bee_algorithm import *
 from data.DataParser import parse_data
 from matplotlib import pyplot as plt
 
-random.seed(77)
+# random.seed(77)
 DATABASE = parse_data('./../../data/raw/polska.xml')
 
 

@@ -1,14 +1,15 @@
-
 class AdmisiblePath:
-    def __init__(self, path_id: str, link_ids: list[str] ):
+    def __init__(self, path_id: str, link_ids: list[str]):
         self.path_id = path_id
         self.link_ids = link_ids
 
     def __str__(self) -> str:
-        return f"{self.path_id} ( {" ".join(str(link_id) for link_id in self.link_ids)} )"
-    
+        # POPRAWKA: Użycie pojedynczego cudzysłowu wewnątrz f-stringa
+        return f"{self.path_id} ( {' '.join(str(link_id) for link_id in self.link_ids)} )"
+
     def __repr__(self) -> str:
-        return f"{self.path_id} ( {" ".join(str(link_id) for link_id in self.link_ids)} )"
+        # POPRAWKA: Użycie pojedynczego cudzysłowu wewnątrz f-stringa
+        return f"{self.path_id} ( {' '.join(str(link_id) for link_id in self.link_ids)} )"
 
     def get_path_id(self) -> str:
         return self.path_id
