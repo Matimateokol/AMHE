@@ -10,7 +10,7 @@ from structures.ObjectsDB import ObjectsDB
 # Ustawienie ziarna losowości dla powtarzalności wyników
 # random.seed(77)
 DATABASE = parse_data('../../data/raw/polska.xml')
-DATABASE = parse_data('../../data/processed/germany50_with_paths.xml')
+# DATABASE = parse_data('../../data/processed/germany50_with_paths.xml')
 # DATABASE = parse_data('../../data/processed/janos-us-ca_with_paths.xml')
 
 
@@ -49,7 +49,9 @@ plt.gca().xaxis.set_major_locator(MultipleLocator(base=int(len(X) / 10)))
 plt.tight_layout()
 
 # Zapisanie wykresu do pliku w katalogu z raportami
-output_path = "../../reports/figures/simulated_annealing_learning_curve.png"
+output_path = "../../reports/figures/simulated_annealing_poland.png"
+# output_path = "../../reports/figures/simulated_annealing_germany.png"
+# output_path = "../../reports/figures/simulated_annealing_janos-us-ca.png"
 plt.savefig(output_path)
 
 print(f"Plot saved to: {output_path}")
