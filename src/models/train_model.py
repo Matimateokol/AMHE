@@ -6,7 +6,9 @@ from data.DataParser import parse_data
 from matplotlib import pyplot as plt
 
 # random.seed(77)
-DATABASE = parse_data('./../../data/raw/polska.xml')
+DATABASE = parse_data('../../data/raw/polska.xml')
+DATABASE = parse_data('../../data/processed/germany50_with_paths.xml')
+DATABASE = parse_data('../../data/processed/janos-us-ca_with_paths.xml')
 
 
 def train_bee_algorithm_model() -> tuple[BeeSpecimen, int, BestSearchHistory]:
@@ -32,5 +34,18 @@ plt.plot(X, Y)
 plt.xlabel("Iterations")
 plt.ylabel("Transmission devices used")
 plt.title("Searching for network design with minimal transmission devices used")
-plt.gca().xaxis.set_major_locator(MultipleLocator(int(len(X) / 5)))
-plt.savefig("./../../reports/figures/output.png")
+# plt.gca().xaxis.set_major_locator(MultipleLocator(int(len(X) / 5)))
+
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+plt.tight_layout()
+if len(X) > 10:
+    num_ticks = 10
+    base = int(len(X) / num_ticks)
+    if base > 0:
+        plt.gca().xaxis.set_major_locator(MultipleLocator(base=base))
+
+# Zapisz wykres
+output_path = "./../../reports/figures/bee_algorithm_learning_curve.png"
+plt.savefig(output_path)
+print(f"\nWykres zapisano w: {output_path}")
+

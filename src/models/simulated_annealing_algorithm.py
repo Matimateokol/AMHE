@@ -13,30 +13,20 @@ from models.bee_algorithm import (
 )
 from structures.ObjectsDB import ObjectsDB
 
-# --- Definicje typów dla spójności z projektem ---
 BeeSpecimen: TypeAlias = np.ndarray
 DPLMapping: TypeAlias = dict[str, dict[str, list[str]]]
 SolutionHistory: TypeAlias = list[int]
 
 # --- Konfiguracja i hiperparametry algorytmu ---
-
 hyperparameters_sa: dict = {
     "T_max": 1000.0,
     "T_min": 0.1,
     "cooling_rate": 0.995,
     "max_iter_per_temp": 50,
     "neighbor_intensity": 1,
-    "initial_solution_strategy": 2
+    "initial_solution_strategy": 2,
+    "modularity": 5
 }
-# hyperparameters_sa: dict = {
-#     "T_max": 20000.0,  # <-- Znacznie wyższa temperatura
-#     "T_min": 0.1,
-#     "cooling_rate": 0.995,
-#     "max_iter_per_temp": 50,
-#     "neighbor_intensity": 2, # <-- Lekko zwiększona intensywność sąsiada
-#     "initial_solution_strategy": 2
-# }
-
 
 def _generate_neighbor_solution(current_solution: BeeSpecimen, demand_values: list[float],
                                 intensity: int) -> BeeSpecimen:
@@ -52,11 +42,9 @@ def _generate_neighbor_solution(current_solution: BeeSpecimen, demand_values: li
     neighbor = current_solution.copy()
     num_paths, num_demands = neighbor.shape
 
-    # Wybierz losowe zapotrzebowania (kolumny) do zmiany
     demands_to_perturb = random.sample(range(num_demands), min(intensity, num_demands))
 
     for col_idx in demands_to_perturb:
-        # Stwórz nową, losową dystrybucję wartości dla wybranego zapotrzebowania
         num_splits = random.randint(1, num_paths)
         new_distribution = _make_random_value_split(
             total_value=int(demand_values[col_idx]),
@@ -79,11 +67,11 @@ def train_simulated_annealing(db_context: ObjectsDB, hyperparams: dict) -> tuple
 
     # --- Krok 1: Inicjalizacja ---
     # Wybierz losowe rozwiązanie początkowe
-    current_solution = initialize_bee(db_context, hyperparams["initial_solution_strategy"])
+    current_solution = initialize_bee(db_context, hyperparams["initial_solution_strategy"], as_ndarray=True)
 
     # Oblicz koszt bieżącego rozwiązania
     encumbrance = calculate_link_encumbrance(current_solution, DPL_MAPPING)
-    current_cost = calculate_cost_function(encumbrance, 5)  # Uwaga: modularność 'm' na stałe
+    current_cost = calculate_cost_function(encumbrance, hyperparams["modularity"]) # <-- POPRAWKA
 
     best_solution = current_solution
     best_cost = current_cost
@@ -103,7 +91,7 @@ def train_simulated_annealing(db_context: ObjectsDB, hyperparams: dict) -> tuple
 
             # Oblicz koszt nowego rozwiązania f(j)
             neighbor_encumbrance = calculate_link_encumbrance(neighbor_solution, DPL_MAPPING)
-            neighbor_cost = calculate_cost_function(neighbor_encumbrance, 5)  # Uwaga: modularność 'm' na stałe
+            neighbor_cost = calculate_cost_function(neighbor_encumbrance, hyperparams["modularity"]) # <-- POPRAWKA
 
             # --- Krok 5: Akceptacja nowego rozwiązania ---
             cost_delta = neighbor_cost - current_cost
