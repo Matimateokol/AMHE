@@ -37,14 +37,14 @@ IterationCostHistory: TypeAlias = list[int]
 hyperparameters_dict: dict = {
     "bee_population_size": 20,
     "max_iter": 100000,
-    "dist_strategy": 1,
-    "modularity": 5,
+    "dist_strategy": 3,
     "pro_search_areas": 5,
     "n_standard_probes": 1,
     "elite_areas": 2,
     "n_elite_probes": 3,
     "local_search_step": 1,
-    "k_iter_no_improv": 1000
+    "k_iter_no_improv": 20,
+    "modularity": 1,
 }
 
 

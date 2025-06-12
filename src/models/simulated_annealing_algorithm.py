@@ -41,8 +41,8 @@ hyperparameters_sa: dict = {
     "cooling_rate": 0.995,
     "max_iter_per_temp": 50,
     "neighbor_intensity": 1,
-    "initial_solution_strategy": 2,
-    "modularity": 5
+    "dist_strategy": 3,
+    "modularity": 1
 }
 
 
@@ -84,7 +84,7 @@ def train_simulated_annealing(db_context: ObjectsDB, hyperparams: dict) -> tuple
 
     # --- KROK 1: Inicjalizacja ---
     # Stwórz losowe rozwiązanie początkowe 'i'.
-    current_solution = initialize_bee(db_context, hyperparams["initial_solution_strategy"])
+    current_solution = initialize_bee(db_context, hyperparams["dist_strategy"])
     # Oblicz jego koszt f(i).
     current_cost = calculate_cost_function(
         calculate_link_encumbrance(current_solution, DPL_MAPPING), hyperparams["modularity"]
