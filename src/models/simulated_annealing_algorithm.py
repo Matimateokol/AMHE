@@ -41,7 +41,7 @@ hyperparameters_sa: dict = {
     "cooling_rate": 0.995,
     "max_iter_per_temp": 50,
     "neighbor_intensity": 1,
-    "dist_strategy": 3,
+    "dist_strategy": 7,
     "modularity": 1
 }
 
