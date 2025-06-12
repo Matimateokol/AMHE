@@ -1,17 +1,3 @@
-# Input is 2-D array, example:
-#                          D1  D2  D3
-#                   Ap1 [ 60  90  70
-#                   Ap2   20   0  20
-#                   Ap3   10   0   0 ]
-# Potential food sources => Admisible paths (m')
-# Number of best food sources => Best admisible paths to exploit (e)
-# Quality assesment => Number of nodes (jumps) in the path - the less is better or loss function / target function (less is better).
-# Hive => Demand (Di)
-# Bees => Demand value (n)
-
-# 1st strategy (aggregation) => all bees assigned to the best food source
-# 2nd strategy (disaggregation) => some bees assigned to the best food source and rest randomly to the remaining ones
-
 import sys
 import random
 import math
@@ -24,7 +10,6 @@ from structures.ObjectsDB import ObjectsDB
 from structures.AdmisiblePaths import AdmisiblePaths
 from structures.Demand import Demand
 
-# --- Typy danych ---
 DPLMapping: TypeAlias = dict[str, dict[str, list[str]]]
 EncumbrancePerLink: TypeAlias = dict[str, int]
 BeeSpecimen: TypeAlias = np.ndarray
@@ -218,7 +203,7 @@ def let_bee_search_locally(bee: BeeSpecimen, search_step: int, num_of_attempts: 
 def train_model(db_context: ObjectsDB, hyperparams: dict) -> tuple[
     BeeSpecimen, int, BestSearchHistory, int, IterationCostHistory]:
     """Główna funkcja trenująca model, oparta na logice hybrydowej."""
-    # --- PRZYGOTOWANIE ---
+
     DPL_MAPPING = db_context.create_demands_to_paths_to_links_map()
     DEMAND_VALUES = db_context.get_demands_values()
 
@@ -228,35 +213,26 @@ def train_model(db_context: ObjectsDB, hyperparams: dict) -> tuple[
     no_improv_count = 0
     iterations = 0
 
-    # --- KROK 1: Inicjalizacja ---
-    # Stworzenie pierwszej, losowej populacji pszczół (rozwiązań).
     current_hive = create_new_bee_population(db_context, hyperparams["dist_strategy"],
                                              hyperparams["bee_population_size"])
-    # Ocena jakości (kosztu) każdego rozwiązania w początkowej populacji.
+
     assessed_hive = assess_scouted_areas_quality(current_hive, hyperparams["modularity"], DPL_MAPPING)
 
-    # --- GŁÓWNA PĘTLA ALGORYTMU ---
+
     for iteration in range(hyperparams["max_iter"]):
         iterations = iteration
         if not assessed_hive: break
 
-        # --- KROK 2: Wybór najlepszych obszarów ---
-        # Posortuj ocenione rozwiązania od najlepszego (najniższy koszt) do najgorszego.
         assessed_hive.sort(key=lambda x: x[2])
-        # Wybierz 'e' najlepszych rozwiązań do intensywnego przeszukiwania (obszary elitarne).
         elite_areas = assessed_hive[:hyperparams["elite_areas"]]
-        # Wybierz kolejne 'p' rozwiązań do standardowego przeszukiwania (obszary obiecujące).
         pro_areas = assessed_hive[hyperparams["elite_areas"]:hyperparams["pro_search_areas"]]
-
-        # --- KROK 3: Faza Eksploatacji (Przeszukiwanie Lokalne) ---
-        # Stwórz listę kandydatów do dalszej analizy, składającą się z już znalezionych elitarnych i obiecujących rozwiązań.
         local_searched_areas = elite_areas + pro_areas
-        # Dla każdego obszaru elitarnego, wykonaj intensywne przeszukiwanie lokalne (więcej prób mutacji).
+
         for area in elite_areas:
             local_searched_areas.extend(
                 let_bee_search_locally(area[0], hyperparams["local_search_step"], hyperparams["n_elite_probes"],
                                        DEMAND_VALUES, DPL_MAPPING, hyperparams["modularity"]))
-        # Dla każdego obszaru obiecującego, wykonaj standardowe przeszukiwanie lokalne (mniej prób mutacji).
+
         for area in pro_areas:
             local_searched_areas.extend(
                 let_bee_search_locally(area[0], hyperparams["local_search_step"], hyperparams["n_standard_probes"],
@@ -264,17 +240,15 @@ def train_model(db_context: ObjectsDB, hyperparams: dict) -> tuple[
 
         if not local_searched_areas: break
 
-        # --- KROK 4: Wybór nowej elity ---
-        # Przesortuj wszystkie dotychczasowe i nowo wygenerowane (zmutowane) rozwiązania.
+
         local_searched_areas.sort(key=lambda x: x[2])
-        # Wybierz nową, najlepszą elitę, która przejdzie do następnej generacji.
+
         new_elite = local_searched_areas[:hyperparams["elite_areas"]]
 
-        # Zapisz koszt najlepszego rozwiązania z bieżącej iteracji
         if new_elite:
             iteration_cost_history.append(new_elite[0][2])
 
-        # --- KROK 5: Aktualizacja globalnie najlepszego rozwiązania ---
+
         if new_elite and new_elite[0][2] < best_solution_cost:
             no_improv_count = 0
             best_solution, _, best_solution_cost = new_elite[0]
@@ -286,14 +260,11 @@ def train_model(db_context: ObjectsDB, hyperparams: dict) -> tuple[
                 print(f"Stopping early after {no_improv_count} iterations with no improvement.")
                 break
 
-        # --- KROK 6: Faza Eksploracji (Tworzenie nowej populacji) ---
-        # Stwórz nową populację: zachowaj nową elitę, a resztę zastąp zupełnie nowymi, losowymi pszczołami.
         current_hive = [bee[0] for bee in new_elite]
         current_hive.extend(create_new_bee_population(db_context, hyperparams["dist_strategy"],
                                                       hyperparams["bee_population_size"] - len(new_elite)))
 
-        # --- KROK 7: Ocena nowej populacji ---
-        # Oceń nowo stworzoną populację. Wynik tej oceny zostanie użyty w następnej iteracji pętli.
+
         assessed_hive = assess_scouted_areas_quality(current_hive, hyperparams["modularity"], DPL_MAPPING)
 
     return best_solution, best_solution_cost, best_solution_history, iterations, iteration_cost_history

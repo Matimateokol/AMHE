@@ -34,7 +34,7 @@ def generate_example_demand_to_path_distribution(db: ObjectsDB, distribution_str
         data[dmd_id] = demand_distribution
 
     if as_ndarray:
-        # Return just the numeric data as a NumPy array (excluding the 'path_id' column)
+
         return data.drop(columns=['path_id']).to_numpy()
 
     return data
@@ -56,7 +56,7 @@ def make_random_value_split(total_value: int, list_size: int, n_splits: int) -> 
 
     \nReturns list of sub-values based on n_splits parameter.
     """
-    # Input validation
+
     if total_value < 0 or list_size < 0 or n_splits < 0:
         raise ValueError("total_value, list_size, and n_splits must be non-negative")
     if n_splits > list_size:
@@ -67,27 +67,26 @@ def make_random_value_split(total_value: int, list_size: int, n_splits: int) -> 
 
     values = [0] * list_size
     if n_splits == 0:
-        # Put total_value in the first position of the list.
         values[0] = total_value
         return values
     elif n_splits == 1:
         values[random.randint(0, list_size - 1)] = total_value
         return values
     else:
-        # Generate n_splits-1 random split points. Example: [20, 120, 160] for total_value = 300 and n_splits = 4
+
         split_points = sorted(random.sample(range(1, total_value), n_splits - 1))
 
-        # Calculate non-zero parts
+
         first_part = [split_points[0]]  # example [20]
         mid_part = [split_points[i + 1] - split_points[i] for i in
-                    range(len(split_points) - 1)]  # example [120-20,160-120]
-        last_part = [total_value - split_points[-1]]  # example [300 - 160]
-        parts = (first_part + mid_part + last_part)  # example [20, 100, 40, 140]
+                    range(len(split_points) - 1)]
+        last_part = [total_value - split_points[-1]]
+        parts = (first_part + mid_part + last_part)
 
-        # Create result list of list_size, initially containing all zeros
+
         values = [0] * list_size
 
-        # Randomly assign non-zero parts to indices
+
         indices = random.sample(range(list_size), n_splits)
         for i, value in zip(indices, parts):
             values[i] = value
@@ -95,24 +94,24 @@ def make_random_value_split(total_value: int, list_size: int, n_splits: int) -> 
         return values
 
 
-### MANUAL TESTS ###
+
 from data.DataParser import parse_data
 
 objects_db = parse_data('./../../data/raw/polska.xml')
 random.seed(77)
 
-# TEST 1
+
 total_value = 300
 list_size = 7
 n_splits = 0
 result = make_random_value_split(total_value, list_size, n_splits)
 print(result)
 
-# TEST 2
+
 bee1 = generate_example_demand_to_path_distribution(objects_db, 3, True)
 print(bee1)
 
-# TEST 3
+
 dmnd_ids = objects_db.get_demand_ids()
 d_p_l_ids = objects_db.create_demands_to_paths_to_links_map()
 path_ids = list(next(iter(d_p_l_ids.values())).keys())

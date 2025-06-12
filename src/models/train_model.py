@@ -1,10 +1,7 @@
-# Plik: train_model.py
 import os
 from matplotlib.ticker import MultipleLocator, MaxNLocator
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
-
-# Upewnij się, że poniższe importy i ścieżki są zgodne ze strukturą Twojego projektu.
 from data.DataParser import parse_data
 from models.bee_algorithm import train_model as train_bee, hyperparameters_dict as params_bee, BestSearchHistory, \
     IterationCostHistory

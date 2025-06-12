@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 def strip_namespace(tree):
     for elem in tree.iter():
         if '}' in elem.tag:
-            elem.tag = elem.tag.split('}', 1)[1]  # Remove namespace prefix
+            elem.tag = elem.tag.split('}', 1)[1]
     return tree
 
 def parse_data(file_path, src_file_format = 'xml') -> ObjectsDB:
@@ -59,7 +59,7 @@ def parse_data(file_path, src_file_format = 'xml') -> ObjectsDB:
 
     admisible_paths = AdmisiblePaths(data_in_runtime.demands.keys())
 
-    # Assign admisible paths for each demand
+
     for demand in demands:
         adm_paths = demand.find("admissiblePaths").findall("admissiblePath")
         
